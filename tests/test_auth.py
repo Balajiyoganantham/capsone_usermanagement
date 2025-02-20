@@ -13,10 +13,9 @@ def test_login_success(client, app):
     assert data["message"] == "Login successful"
 
 def test_login_fail(client):
-    # Attempt login with wrong credentials. (No user seeded.)
+
     response = client.post("/login", json={"username": "nonexistent", "password": "wrong"})
-    # Expect 401 Unauthorized.
+
     assert response.status_code == 401
-    data = response.get_json()
-    # Our /login endpoint returns {'message': 'Unauthorized'} on failure.
+
     assert data["message"] == "Unauthorized"
