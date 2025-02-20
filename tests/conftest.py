@@ -1,3 +1,7 @@
+import flask
+if not hasattr(flask, '_request_ctx_stack'):
+    flask._request_ctx_stack = flask._app_ctx_stack
+
 import os
 import sys
 
