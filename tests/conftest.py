@@ -1,3 +1,4 @@
+# tests/conftest.py
 import flask
 if not hasattr(flask, '_request_ctx_stack'):
     flask._request_ctx_stack = flask._app_ctx_stack
@@ -9,14 +10,6 @@ import sys
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
-
-# Optional: Print sys.path for debugging purposes.
-#print("sys.path:", sys.path)
-
-# Monkey-patch Flask for pytest-flask compatibility
-import flask
-if not hasattr(flask, '_request_ctx_stack'):
-    flask._request_ctx_stack = flask._app_ctx_stack
 
 import pytest
 from appz import create_app, db
