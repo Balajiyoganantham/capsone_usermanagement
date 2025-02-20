@@ -50,7 +50,17 @@ def register():
 
     return jsonify({'message': 'User registered successfully', 'user': new_user.to_dict()}), 201
 
-@auth_bp.route('/login', methods=['GET'])
-@auth.login_required
+@auth_bp.route('/login', methods=['POST'])
 def login():
-    return jsonify({'message': 'Login successful', 'user': g.current_user.to_dict()}), 200
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({'error': 'Username and password required'}), 400
+
+    username = data['username']
+    password = data['password']
+    user = User.query.filter_by(username=username).first()
+
+    if user and bcrypt.check_password_hash(user.password, password):
+        return jsonify({'message': 'Login successful', 'user': user.to_dict()}), 200
+    else:
+        return jsonify({'message': 'Unauthorized'}), 401
