@@ -1,0 +1,73 @@
+Steps to Deploy the Project to Azure using GitHub Actions:
+
+1. Create an Azure Web App:
+   - Go to the Azure portal.
+   - Click on "Create a resource" and select "Web App".
+   - Fill in the required details (Subscription, Resource Group, Name, Runtime stack, etc.).
+   - Click "Review + create" and then "Create".
+
+2. Configure Deployment Credentials:
+   - In the Azure portal, navigate to your Web App.
+   - Go to "Deployment Center" and select "GitHub" as the source.
+   - Authorize and select your repository and branch.
+   - Click "Save".
+
+3. Add Azure Credentials to GitHub Secrets:
+   - In the Azure portal, go to your Web App and select "Deployment Center".
+   - Click on "Manage deployment credentials" and note down the credentials.
+   - Go to your GitHub repository.
+   - Navigate to "Settings" > "Secrets and variables" > "Actions".
+   - Add the following secrets:
+     - `AZURE_WEBAPP_NAME`: Your Web App name.
+     - `AZURE_WEBAPP_PUBLISH_PROFILE`: Your Web App publish profile content.
+
+4. Create GitHub Actions Workflow:
+   - In your GitHub repository, create a new file at `.github/workflows/azure-webapp.yml` with the following content:
+
+     ```yaml
+     name: Build and Deploy to Azure Web App
+
+     on:
+       push:
+         branches:
+           - main
+
+     jobs:
+       build-and-deploy:
+         runs-on: ubuntu-latest
+
+         steps:
+           - name: Checkout code
+             uses: actions/checkout@v2
+
+           - name: Set up Python
+             uses: actions/setup-python@v2
+             with:
+               python-version: '3.9'
+
+           - name: Install dependencies
+             run: |
+               python -m pip install --upgrade pip
+               pip install -r requirements.txt
+
+           - name: Run tests
+             run: |
+               pytest
+
+           - name: Deploy to Azure Web App
+             uses: azure/webapps-deploy@v2
+             with:
+               app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+               publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+               package: .
+     ```
+
+5. Commit and Push
+   - Commit and push the changes to your GitHub repository.
+   - This will trigger the GitHub Actions workflow to build and deploy your application to Azure.
+
+6. Verify Deployment:
+   - Go to the Azure portal and navigate to your Web App.
+   - Verify that your application is running successfully.
+
+By following these steps, you can automate the deployment of your project to Azure directly from GitHub.
