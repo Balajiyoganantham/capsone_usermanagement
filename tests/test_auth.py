@@ -14,7 +14,8 @@ def test_login_success(client, app):
 def test_login_fail(client):
     response = client.post("/login", json={"username": "nonexistent", "password": "wrong"})
     assert response.status_code == 401
-
+    
+    # Parse the JSON response
     data = response.get_json()
     
     assert data["message"] == "Unauthorized"
