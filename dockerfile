@@ -23,3 +23,7 @@ EXPOSE 5000
 
 # Define command to run the application
 CMD ["flask", "run", "--host=0.0.0.0"]
+# docker build -t flask-user-api .
+# docker run -p 5000:5000 flask-user-api
+# docker tag flask-user-api balajiyoganantham/flask-api-usermanagement
+#docker push balajiyoganantham/flask-api-usermanagement
